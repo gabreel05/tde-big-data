@@ -21,7 +21,7 @@ public class NumberOfTransactionsInvolvingBrazil {
         Configuration configuration = new Configuration();
 
         Path input = new Path("in/transactions.csv");
-        Path output = new Path("/output/NumberOfTransactionsInvolvingBrazil.txt");
+        Path output = new Path("output/NumberOfTransactionsInvolvingBrazil.txt");
 
         Job job = Job.getInstance(configuration, "NumberOfTransactionsInvolvingBrazil");
 

@@ -21,7 +21,7 @@ public class NumberOfTransactionsPerFlowTypeAndYear {
         Configuration configuration = new Configuration();
 
         Path input = new Path("in/transactions.csv");
-        Path output = new Path("/output/NumberOfTransactionsPerFlowTypeAndYear.txt");
+        Path output = new Path("output/NumberOfTransactionsPerFlowTypeAndYear.txt");
 
         Job job = Job.getInstance(configuration, "NumberOfTransactionsPerFlowTypeAndYear");
 

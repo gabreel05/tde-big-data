@@ -22,7 +22,7 @@ public class AverageOfCommodityValuePerYear {
         Configuration configuration = new Configuration();
 
         Path input = new Path("in/transactions.csv");
-        Path output = new Path("/output/AverageOfCommodityValuePerYear.txt");
+        Path output = new Path("output/AverageOfCommodityValuePerYear.txt");
 
         Job job = Job.getInstance(configuration, "AverageOfCommodityValuePerYear");
 

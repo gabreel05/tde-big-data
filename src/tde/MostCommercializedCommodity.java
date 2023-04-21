@@ -21,7 +21,7 @@ public class MostCommercializedCommodity {
         Configuration configuration = new Configuration();
 
         Path input = new Path("in/transactions.csv");
-        Path output = new Path("/output/MostCommercializedCommodity.txt");
+        Path output = new Path("output/MostCommercializedCommodity.txt");
 
         Job job = Job.getInstance(configuration, "MostCommercializedCommodity");
 
