@@ -47,12 +47,14 @@ public class NumberOfTransactionsInvolvingBrazil {
                 throws IOException, InterruptedException {
             String line = value.toString();
 
-            String[] values = line.split("/");
+            if (!line.startsWith("country")) {
+                String[] values = line.split("/");
 
-            String country = values[0];
+                String country = values[0];
 
-            if (country.equals("Brazil")) {
-                context.write(new Text(country), new IntWritable(1));
+                if (country.equals("Brazil")) {
+                    context.write(new Text(country), new IntWritable(1));
+                }
             }
         }
     }

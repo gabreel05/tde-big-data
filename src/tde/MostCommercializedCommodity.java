@@ -14,25 +14,24 @@ import org.apache.log4j.BasicConfigurator;
 
 import java.io.IOException;
 
-public class NumberOfTransactionsPerFlowTypeAndYear {
+public class MostCommercializedCommodity {
     public static void main(String[] args) throws IOException, InterruptedException, ClassNotFoundException {
         BasicConfigurator.configure();
 
         Configuration configuration = new Configuration();
 
         Path input = new Path("in/transactions.csv");
-        Path output = new Path("/output/NumberOfTransactionsPerFlowTypeAndYear.txt");
+        Path output = new Path("/output/MostCommercializedCommodity.txt");
 
-        Job job = Job.getInstance(configuration, "NumberOfTransactionsPerFlowTypeAndYear");
+        Job job = Job.getInstance(configuration, "MostCommercializedCommodity");
 
-        job.setJarByClass(NumberOfTransactionsPerFlowTypeAndYear.class);
+        job.setJarByClass(MostCommercializedCommodity.class);
         job.setMapperClass(Map.class);
-        job.setCombinerClass(Reduce.class);
         job.setReducerClass(Reduce.class);
 
-        job.setMapOutputKeyClass(NumberOfTransactionsPerFlowTypeAndYearWritable.class);
+        job.setMapOutputKeyClass(Text.class);
         job.setMapOutputValueClass(IntWritable.class);
-        job.setOutputKeyClass(NumberOfTransactionsPerFlowTypeAndYearWritable.class);
+        job.setOutputKeyClass(Text.class);
         job.setOutputValueClass(IntWritable.class);
 
         FileInputFormat.addInputPath(job, input);
@@ -42,29 +41,32 @@ public class NumberOfTransactionsPerFlowTypeAndYear {
     }
 
     public static class Map
-            extends Mapper<LongWritable, Text, NumberOfTransactionsPerFlowTypeAndYearWritable, IntWritable> {
+            extends Mapper<LongWritable, Text, Text, IntWritable> {
         @Override
         protected void map(LongWritable key, Text value,
-                           Mapper<LongWritable, Text, NumberOfTransactionsPerFlowTypeAndYearWritable, IntWritable>.Context context)
+                           Mapper<LongWritable, Text, Text, IntWritable>.Context context)
                 throws IOException, InterruptedException {
             String line = value.toString();
 
             if (!line.startsWith("country")) {
                 String[] values = line.split(";");
 
-                String flowType = values[4];
+                int commodityCode = Integer.parseInt(values[2]);
                 int year = Integer.parseInt(values[1]);
+                String flowType = values[4];
 
-                context.write(new NumberOfTransactionsPerFlowTypeAndYearWritable(flowType, year), new IntWritable(1));
+                if (year == 2016) {
+                    context.write(new Text(flowType), new IntWritable(commodityCode));
+                }
             }
         }
     }
 
     public static class Reduce
-            extends Reducer<NumberOfTransactionsPerFlowTypeAndYearWritable, IntWritable, NumberOfTransactionsPerFlowTypeAndYearWritable, IntWritable> {
+            extends Reducer<Text, IntWritable, Text, IntWritable> {
         @Override
-        protected void reduce(NumberOfTransactionsPerFlowTypeAndYearWritable key, Iterable<IntWritable> values,
-                              Reducer<NumberOfTransactionsPerFlowTypeAndYearWritable, IntWritable, NumberOfTransactionsPerFlowTypeAndYearWritable, IntWritable>.Context context)
+        protected void reduce(Text key, Iterable<IntWritable> values,
+                              Reducer<Text, IntWritable, Text, IntWritable>.Context context)
                 throws IOException, InterruptedException {
             int sum = 0;
 

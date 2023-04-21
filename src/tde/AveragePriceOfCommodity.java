@@ -50,7 +50,7 @@ public class AveragePriceOfCommodity {
                 throws IOException, InterruptedException {
             String line = value.toString();
 
-            if (line.startsWith("country")) {
+            if (!line.startsWith("country")) {
                 String[] values = line.split("/");
 
                 double commodityPrice = Double.parseDouble(values[5]);
