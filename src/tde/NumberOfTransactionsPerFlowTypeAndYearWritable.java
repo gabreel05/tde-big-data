@@ -50,6 +50,12 @@ public class NumberOfTransactionsPerFlowTypeAndYearWritable
     }
 
     @Override
+    public String toString() {
+        return "flowType: " + flowType +
+                ", year: " + year;
+    }
+
+    @Override
     public int compareTo(NumberOfTransactionsPerFlowTypeAndYearWritable o) {
         return Integer.compare(this.hashCode(), o.hashCode());
     }

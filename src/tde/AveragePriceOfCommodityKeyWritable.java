@@ -60,6 +60,13 @@ public class AveragePriceOfCommodityKeyWritable
     }
 
     @Override
+    public String toString() {
+        return "unitType: " + unitType +
+                ", year: " + year +
+                ", category: " + category;
+    }
+
+    @Override
     public int compareTo(AveragePriceOfCommodityKeyWritable o) {
         return Integer.compare(this.hashCode(), o.hashCode());
     }

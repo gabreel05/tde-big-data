@@ -28,7 +28,7 @@ public class AverageOfCommodityValuePerYear {
 
         job.setJarByClass(AverageOfCommodityValuePerYear.class);
         job.setMapperClass(Map.class);
-        job.setCombinerClass(Combine.class);
+//        job.setCombinerClass(Combine.class);
         job.setReducerClass(Reduce.class);
 
         job.setMapOutputKeyClass(IntWritable.class);
@@ -50,8 +50,8 @@ public class AverageOfCommodityValuePerYear {
                 throws IOException, InterruptedException {
             String line = value.toString();
 
-            if (!line.startsWith("country")) {
-                String[] values = line.split("/");
+            if (!line.startsWith("country_or_area")) {
+                String[] values = line.split(";");
 
                 double commodityValue = Double.parseDouble(values[5]);
                 int year = Integer.parseInt(values[1]);

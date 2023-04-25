@@ -49,7 +49,7 @@ public class NumberOfTransactionsPerFlowTypeAndYear {
                 throws IOException, InterruptedException {
             String line = value.toString();
 
-            if (!line.startsWith("country")) {
+            if (!line.startsWith("country_or_area")) {
                 String[] values = line.split(";");
 
                 String flowType = values[4];

@@ -28,7 +28,7 @@ public class AveragePriceOfCommodity {
 
         job.setJarByClass(AveragePriceOfCommodity.class);
         job.setMapperClass(Map.class);
-        job.setCombinerClass(Combine.class);
+//        job.setCombinerClass(Combine.class);
         job.setReducerClass(Reduce.class);
 
         job.setMapOutputKeyClass(AveragePriceOfCommodityKeyWritable.class);
@@ -50,8 +50,8 @@ public class AveragePriceOfCommodity {
                 throws IOException, InterruptedException {
             String line = value.toString();
 
-            if (!line.startsWith("country")) {
-                String[] values = line.split("/");
+            if (!line.startsWith("country_or_area")) {
+                String[] values = line.split(";");
 
                 double commodityPrice = Double.parseDouble(values[5]);
 
@@ -59,7 +59,7 @@ public class AveragePriceOfCommodity {
                 int year = Integer.parseInt(values[1]);
                 String category = values[9];
 
-                String flowType = values[5];
+                String flowType = values[4];
                 String country = values[0];
 
                 if (flowType.equals("Export") && country.equals("Brazil")) {

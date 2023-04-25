@@ -13,6 +13,7 @@ import org.apache.hadoop.mapreduce.lib.output.FileOutputFormat;
 import org.apache.log4j.BasicConfigurator;
 
 import java.io.IOException;
+import java.util.Objects;
 
 public class NumberOfTransactionsInvolvingBrazil {
     public static void main(String[] args) throws IOException, InterruptedException, ClassNotFoundException {
@@ -47,8 +48,8 @@ public class NumberOfTransactionsInvolvingBrazil {
                 throws IOException, InterruptedException {
             String line = value.toString();
 
-            if (!line.startsWith("country")) {
-                String[] values = line.split("/");
+            if (!line.startsWith("country_or_area")) {
+                String[] values = line.split(";");
 
                 String country = values[0];
 
