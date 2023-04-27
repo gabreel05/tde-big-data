@@ -25,10 +25,10 @@ public class AverageNumberTransactionsPerFlowTypeAndYear {
         Configuration c = new Configuration();
         String[] files = new GenericOptionsParser(c, args).getRemainingArgs();
         // arquivo de entrada
-        Path input = new Path(files[0]);
+        Path input = new Path("in/transactions.csv");
 
         // arquivo de saida
-        Path output = new Path(files[1]);
+        Path output = new Path("output/AverageNumberTransactionsPerFlowTypeAndYear.txt");
 
         // criacao do job e seu nome
         Job j = new Job(c, "number transactions per year and flow type");
@@ -41,9 +41,9 @@ public class AverageNumberTransactionsPerFlowTypeAndYear {
 
         // Tipos de saida
         j.setMapOutputKeyClass(TransactionWritable.class); // tipo da chave de saida do MAP
-        j.setMapOutputValueClass(IntWritable.class); // tipo do valor de saida do MAP
+        j.setMapOutputValueClass(DoubleWritable.class); // tipo do valor de saida do MAP
         j.setOutputKeyClass(TransactionWritable.class); // tipo de chave de saida do reduce
-        j.setOutputValueClass(DoubleWritable.class); // tipo de valor de saida do reduce
+        j.setOutputValueClass(Text.class); // tipo de valor de saida do reduce
 
         // Definindo arquivos de entrada e saida
         FileInputFormat.addInputPath(j, input); // adicionando o caminho do input no job
@@ -55,7 +55,7 @@ public class AverageNumberTransactionsPerFlowTypeAndYear {
     }
 
     public static class MapForCountTransactionKeys extends Mapper<LongWritable, Text,
-            TransactionWritable, IntWritable> {
+            TransactionWritable, DoubleWritable> {
         public void map(LongWritable key, Text value, Context context) throws IOException, InterruptedException {
             if (!key.equals(new LongWritable(0))) {
                 String line = value.toString();
@@ -65,26 +65,36 @@ public class AverageNumberTransactionsPerFlowTypeAndYear {
                 String year = words[1];
                 String unitType = words[7];
 
+                double tradeUsd = Double.parseDouble(words[5]);
+
                 TransactionWritable mapKey = new TransactionWritable(Integer.parseInt(year), unitType);
                 IntWritable mapValue = new IntWritable(1);
 
-                context.write(mapKey, mapValue);
+                context.write(mapKey, new DoubleWritable(tradeUsd));
             }
 
         }
     }
 
-    public static class ReduceForCountTransactionKeys extends Reducer<TransactionWritable, IntWritable, TransactionWritable, DoubleWritable> {
-        public void reduce(TransactionWritable key, Iterable<IntWritable> values, Context context)
+    public static class ReduceForCountTransactionKeys extends Reducer<TransactionWritable, DoubleWritable, TransactionWritable, Text> {
+        private final static Text result = new Text();
+        public void reduce(TransactionWritable key, Iterable<DoubleWritable> values, Context context)
                 throws IOException, InterruptedException {
-            int sum = 0;
+            double sum = 0.0;
+            double max = Double.MIN_VALUE;
+            double min = Double.MAX_VALUE;
             int count = 0;
-            for (IntWritable value : values) {
+
+            for (DoubleWritable value : values) {
                 sum += value.get();
+                max = Math.max(max, value.get());
+                min = Math.min(min, value.get());
                 count = count + 1;
             }
             double average = (double) sum / count;
-            context.write(key, new DoubleWritable(average));
+
+            result.set("Max: " + max + ", Min: " + min + ", Mean: " + average);
+            context.write(key, result);
 
         }
     }
