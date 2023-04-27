@@ -13,7 +13,6 @@ import org.apache.hadoop.mapreduce.lib.output.FileOutputFormat;
 import org.apache.log4j.BasicConfigurator;
 
 import java.io.IOException;
-import java.util.Objects;
 
 public class NumberOfTransactionsInvolvingBrazil {
     public static void main(String[] args) throws IOException, InterruptedException, ClassNotFoundException {
